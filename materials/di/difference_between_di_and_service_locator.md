@@ -25,83 +25,16 @@
 
 В настоящее время эти понятия немножко размыты на практике и для удобства существующие DI+SL реализации часто называют просто DI.
 
-
-- [x] 2
-- [x] 3
-- [x] 4
-- [x] 5
-
 **DI означает:**
-- cущности не знают о контейнере
+- сущности не знают о контейнере
 - все зависимости предоставляются извне
 
-```
-abstract class Engine {}
-
-class DefaultEngine implements Engine {}
-
-class Car {
-  final Engine engine;
-
-  Car(this.engine);
-}
-
-void main() {
-  final Car car = Car(DefaultEngine());
-}
-```
+[example_di](https://github.com/Tsiuryn/dkr_2022/blob/master/materials/di/example_di.dart)
 
 **SL означает:**
-- cущность сама заботится о том, чтобы получить зависимость, однако получает уже готовую для работы зависимость
+- сущность сама заботится о том, чтобы получить зависимость, однако получает уже готовую для работы зависимость
 
-```
-void main() {
-  final _locator = Locator();
-  _locator.bind<Engine>(DefaultEngine());
-
-  final car = Car(
-    engine: _locator.resolve<Engine>(),
-  );
-  car.powerEngine();
-}
-
-class Locator {
-  final Set _dependencies = {};
-
-  void bind<T>(T value) {
-    _dependencies.add(value);
-  }
-
-  T resolve<T>() {
-    return _dependencies.firstWhere((element) => element is T, orElse: () {
-      return throw ('Dependency didn\'t register');
-    });
-  }
-}
-
-abstract class Engine {
-  void power();
-}
-
-class DefaultEngine implements Engine {
-  @override
-  void power() {
-    print('35 kW');
-  }
-}
-
-class Car {
-  final Engine engine;
-
-  Car({required this.engine});
-
-  void powerEngine() {
-    engine.power();
-  }
-}
-
-```
-
+[example_sl](https://github.com/Tsiuryn/dkr_2022/blob/master/materials/di/example_sl.dart)
 
 # Использованные статьи:
 
