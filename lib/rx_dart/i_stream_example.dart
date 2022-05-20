@@ -3,20 +3,13 @@ import 'dart:async';
 late StreamSubscription subscription;
 
 void main() {
-  int a = 0;
+  int eventValue = 0;
   final subject = StreamSubject();
 
-  Stream.fromIterable([2,3,4,5,6]).asBroadcastStream().distinct();
-
-
-  // final mll = Stream.periodic(const Duration(milliseconds: 2000),(i) => '$i');
-  // mll.listen((event) {print(event);});
-
-
   subscription = subject.counterUpdates.listen((event) {
-    a = event;
-    print(a);
-    if (a == 33) {
+    eventValue = event;
+    print(eventValue);
+    if (eventValue == 33) {
       subject.incrementCounter();
       subject.cancel();
       subscription.cancel();
@@ -36,8 +29,8 @@ class StreamSubject {
 
   void incrementCounter() async {
     _isStop = !_isStop;
+    if(_isStop) return;
     for (var i = 0; i < 50; ++i) {
-      if(_isStop) return;
       _counter++;
       _streamController.add(_counter);
       await Future.delayed(const Duration(milliseconds: 100));
